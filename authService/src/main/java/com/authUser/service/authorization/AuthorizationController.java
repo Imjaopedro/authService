@@ -1,7 +1,9 @@
 package com.authUser.service.authorization;
 
+import com.authUser.service.infra.TokenService;
 import com.authUser.service.user.UserEntity;
 import com.authUser.service.user.UserRepository;
+import org.antlr.v4.runtime.Token;
 import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +22,13 @@ public class AuthorizationController {
     private final AuthenticationManager authorizationManager;
     private final UserRepository repository;
 
+    private final TokenService tokenService;
 
-    AuthorizationController(UserRepository repository, AuthenticationManager authorizationManager){
+
+    AuthorizationController(UserRepository repository, AuthenticationManager authorizationManager, TokenService tokenService){
         this.repository = repository;
         this.authorizationManager = authorizationManager;
+        this.tokenService = tokenService;
     }
 
 
@@ -34,7 +39,9 @@ public class AuthorizationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(dto.login(), dto.password());
         var auth = this.authorizationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((UserEntity) auth.getPrincipal());
+
+        return ResponseEntity.ok(new AuthenticationDTOResponse(token));
     }
 
 
