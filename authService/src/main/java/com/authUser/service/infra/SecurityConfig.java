@@ -18,6 +18,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final SecurityFilter securityFilter;
+
+    SecurityConfig(SecurityFilter securityFilter){
+        this.securityFilter = securityFilter;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -29,12 +34,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
                 .anyRequest().authenticated())
 
-                .addFilterBefore(SecurityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build()
-
-
-
-
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
 
