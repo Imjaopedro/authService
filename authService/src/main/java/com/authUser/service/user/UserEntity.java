@@ -26,6 +26,13 @@ public class UserEntity implements UserDetails {
     private RoleEnum roleEnum;
 
 
+    public UserEntity(String username, String password, String email, String cpf, RoleEnum roleEnum) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.cpf = cpf;
+        this.roleEnum = roleEnum;
+    }
 
     public Long getId() {
         return id;
