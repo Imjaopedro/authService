@@ -1,5 +1,7 @@
-package com.authUser.service.user;
+package com.authUser.service.services;
 
+import com.authUser.service.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,14 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorizationService implements UserDetailsService {
 
-    private final UserRepository userRepository;
-
-    public AuthorizationService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
+    @Autowired
+    UserRepository repository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+        return repository.findByLogin(username);
     }
 }
